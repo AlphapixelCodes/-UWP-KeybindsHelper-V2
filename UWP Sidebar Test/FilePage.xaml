@@ -1,0 +1,90 @@
+﻿<Page
+    x:Class="UWP_Sidebar_Test.FilePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWP_Sidebar_Test"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Transparent"
+    Loaded="Page_Loaded">
+
+    <Grid Margin="20" Width="600" HorizontalAlignment="Left" BorderBrush="#4CFFFFFF" CornerRadius="5" BorderThickness="1" VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid HorizontalAlignment="Left" Margin="5,5,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Find" Margin="20,0"/>
+                    <TextBox Width="300" BorderThickness="0" VerticalAlignment="Center" Name="SearchFileBox" TextChanged="SearchFileBox_TextChanged"/>
+                </StackPanel>
+            </Border>
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="White">Sort</TextBlock>
+            <ComboBox Grid.Column="3" VerticalAlignment="Center" x:Name="SortCombobox" Width="110" SelectedIndex="0" SelectionChanged="SortCombobox_SelectionChanged">
+                    <ComboBoxItem Content="Date"/>
+                    <ComboBoxItem Content="Name"/>
+                </ComboBox>
+            <Button Grid.Column="5" ToolTipService.ToolTip="Refresh" CornerRadius="10" Background="Transparent" Click="RefreshList">
+                <SymbolIcon Symbol="Refresh"  VerticalAlignment="Center"/>
+            </Button>
+        </Grid>
+        <Rectangle Grid.Row="1" Fill="#4CFFFFFF" Height="2px" Margin="5,7,20,5" RadiusX="1" RadiusY="10"/>
+        <ListView x:Name="FileListView" Grid.Row="2" Height="350">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:File">
+                    <Grid Width="560">
+                        <Grid.ContextFlyout>
+                            <MenuFlyout >
+                                <MenuFlyoutItem Tag="Open" DataContext="{Binding StartNameNoExtension}" Click="FileMenuFlyoutItem_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <SymbolIcon Symbol="OpenFile"/>
+                                    </MenuFlyoutItem.Icon>
+                                    Open
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Tag="Delete" DataContext="{Binding StartNameNoExtension}" Click="FileMenuFlyoutItem_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <SymbolIcon Symbol="Delete"/>
+                                    </MenuFlyoutItem.Icon>
+                                    Delete
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Tag="Copy" DataContext="{Binding StartNameNoExtension}" Click="FileMenuFlyoutItem_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <SymbolIcon Symbol="Copy"/>
+                                    </MenuFlyoutItem.Icon>
+                                    Copy
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+                        <TextBlock Text="{Binding StartNameNoExtension}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding DateModified}" HorizontalAlignment="Right"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <Grid Grid.Row="3" Height="auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition  Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox IsReadOnly="True" Text="{Binding ElementName=FileListView, Path=SelectedItem}" VerticalAlignment="Center"/>
+            <Button Grid.Column="1" Click="FileMenuFlyoutItem_Click" Tag="Open">Open</Button>
+            <Button Grid.Column="2" Click="FileMenuFlyoutItem_Click" Tag="Copy">Copy</Button>
+            <Button Grid.Column="3" Click="FileMenuFlyoutItem_Click" CornerRadius="0,0,4,0" Tag="Delete">Delete</Button>
+        </Grid>
+    </Grid>
+</Page>

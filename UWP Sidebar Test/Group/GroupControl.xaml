@@ -1,0 +1,160 @@
+﻿<UserControl
+    
+    x:Class="UWP_Sidebar_Test.GroupControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWP_Sidebar_Test"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="250"
+    d:DesignWidth="400" Loaded="UserControl_Loaded"
+    Name="root">
+    <UserControl.Resources>
+        <Storyboard x:Name="Brighten">
+            <ColorAnimation Storyboard.TargetName="BorderGrid" 
+        Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+        From="{StaticResource GroupBackgroundColor}" To="{StaticResource GroupBackgroundBrighterColor}" Duration="0:0:.5" Completed="BrightenAnimation_Completed"/>
+        </Storyboard>
+        <Storyboard x:Name="Darken" >
+            <ColorAnimation 
+                Storyboard.TargetName="BorderGrid" 
+                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                From="{StaticResource GroupBackgroundBrighterColor}"
+                To="{StaticResource GroupBackgroundColor}" 
+                Duration="0:0:.5" 
+                Completed="DarkenAnimation_Completed"/>
+        </Storyboard>
+    </UserControl.Resources>
+    <Grid Margin="5" VerticalAlignment="Stretch" Name="GridMain" CanDrag="True" IsHoldingEnabled="False" DragStarting="Title_DragStarting" DragEnter="GroupGrid_DragEnter" DragLeave="GroupGrid_DragLeave" DropCompleted="GridGroup_DragComplete" AllowDrop="true">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <local:DragDropUserControl Grid.Row="0" x:Name="DragDropControl"/>
+
+        <Grid Grid.Row="1" CornerRadius="15" BorderThickness="1" Name="BorderGrid" Background="{StaticResource GroupBackground}" DragOver="Keybind_DragOver_Control" Drop="Keybind_Drop" AllowDrop="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" RightTapped="TopGrid_RightTapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border x:Name="TitleBorder" Grid.Row="1" Grid.Column="1" Tapped="TittleBox_Tapped" BorderThickness="1" CornerRadius="5">
+                    <TextBlock x:Name="TitleBox"  Grid.Row="1" Grid.Column="1" Text="{Binding ElementName=root, Path=groupClass.Name}" TextAlignment="Center" FontSize="20" VerticalAlignment="Center"/>
+                </Border>
+
+
+                <Button Width="26" Height="26" Grid.Row="1" Grid.Column="2" Click="AddKeybind_Click" Padding="0" Margin="5" Background="Transparent" ToolTipService.ToolTip="Add Keybind" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <SymbolIcon Symbol="Add"/>
+                </Button>
+                <Button Width="32" Height="32" Grid.Row="1" Grid.Column="3" Padding="0" Margin="0,0,5,0" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Button.Flyout>
+                        <CommandBarFlyout ShowMode="TransientWithDismissOnPointerMoveAway" Placement="Top" x:Name="GroupFlyout">
+
+                            <CommandBarFlyout.PrimaryCommands>
+                                <AppBarButton Icon="Edit" Click="GroupFlyout_Click" Label="Rename Group" ToolTipService.ToolTip="Rename Group"/>
+                                <AppBarButton Icon="Copy" Click="GroupFlyout_Click" Label="Copy" ToolTipService.ToolTip="Copy"/>
+                                <AppBarButton Icon="Clear" Click="GroupFlyout_Click" Label="Clear" ToolTipService.ToolTip="Clear"/>
+                                <AppBarButton Icon="Delete" Click="GroupFlyout_Click" Label="Delete" ToolTipService.ToolTip="Delete"/>
+                            </CommandBarFlyout.PrimaryCommands>
+
+                            <CommandBarFlyout.SecondaryCommands>
+                                <AppBarButton Label="Merge into Group">
+                                    <AppBarButton.Flyout>
+                                        <MenuFlyout x:Name="CombineWithGroupFlyout">
+                                        </MenuFlyout>
+                                    </AppBarButton.Flyout>
+                                </AppBarButton>
+                                <AppBarButton Label="Hide Keybinds" Name="CollapseButton" Click="GroupFlyout_Click" Tag="CollapseButton"/>
+
+                            </CommandBarFlyout.SecondaryCommands>
+                        </CommandBarFlyout>
+                    </Button.Flyout>
+                    <Viewbox Height="22.25" Width="22.25">
+                        <SymbolIcon Symbol="GlobalNavigationButton"/>
+                    </Viewbox>
+                </Button>
+            </Grid>
+            <Grid Grid.Row="1">
+                <ListView Name="KeybindListView" AllowDrop="True"   VerticalAlignment="Top" PreviewKeyDown="Keybind_PreviewKeyDown">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Background"  Value="Transparent"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <ContentPresenter HorizontalAlignment="Stretch"  PointerExited="StupidListBoxFix_Exit" PointerEntered="StupidListBoxFix_Enter"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="local:Keybind">
+                            <Grid Margin="5" Height="30" DoubleTapped="Keybind_DoubleTapped" IsHoldingEnabled="False" CanDrag="True" DragStarting="Keybind_DragStarting" Background="Transparent">
+                                <Grid.ContextFlyout>
+                                    <CommandBarFlyout>
+                                        <CommandBarFlyout.PrimaryCommands>
+                                            <AppBarButton Icon="Edit" Click="KeybindFlyoutButton_Click" Label="Edit" ToolTipService.ToolTip="Rename Group"/>
+                                            <AppBarButton Icon="Copy" Click="KeybindFlyoutButton_Click" Label="Copy" ToolTipService.ToolTip="Copy"/>
+                                            <AppBarButton Icon="Delete" Click="KeybindFlyoutButton_Click" Label="Delete" ToolTipService.ToolTip="Delete"/>
+                                            <AppBarButton Icon="Up" Click="KeybindFlyoutButton_Click" Label="Up" ToolTipService.ToolTip="Move Up"/>
+                                            <AppBarButton Icon="Up" Click="KeybindFlyoutButton_Click" Label="Down" ToolTipService.ToolTip="Move Down" RenderTransformOrigin="0.5,0.5">
+                                                <AppBarButton.RenderTransform>
+                                                    <TransformGroup>
+                                                        <ScaleTransform ScaleY="-1"/>
+                                                        <SkewTransform/>
+                                                        <RotateTransform/>
+                                                        <TranslateTransform/>
+                                                    </TransformGroup>
+                                                </AppBarButton.RenderTransform>
+
+                                            </AppBarButton>
+                                        </CommandBarFlyout.PrimaryCommands>
+                                    </CommandBarFlyout>
+                                </Grid.ContextFlyout>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" VerticalAlignment="Center"  Margin="0,0,0,0"/>
+                                <ContentPresenter Content="{Binding KeybindStack}"/>
+                            <!--    <Grid Grid.Column="1" ColumnSpacing="5" Margin="0,0,5,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" BorderThickness="1" BorderBrush="#4CFFFFFF" CornerRadius="3" Background="Transparent" Visibility="{Binding VisKB3}" >
+                                        <TextBlock Text="{Binding KB3}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Border>
+                                    <Border Grid.Column="1" BorderThickness="1" BorderBrush="#4CFFFFFF" CornerRadius="3" Background="Transparent" Visibility="{Binding VisKB2}">
+                                        <TextBlock  Text="{Binding KB2}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Border>
+                                    <Border Grid.Column="2" BorderThickness="1" BorderBrush="#4CFFFFFF" CornerRadius="3" Background="Transparent" Visibility="{Binding VisKB1}">
+                                        <TextBlock Text="{Binding KB1}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Border>
+                                </Grid>-->
+                            </Grid>
+
+
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                </ListView>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</UserControl>
+
+    

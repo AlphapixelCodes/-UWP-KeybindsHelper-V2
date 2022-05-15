@@ -1,0 +1,28 @@
+﻿<ContentDialog
+    x:Class="UWP_Sidebar_Test.EditKeybindDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWP_Sidebar_Test"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" RequestedTheme="Dark"
+    Title="Edit Keybind"
+    PrimaryButtonText="Save"
+    SecondaryButtonText="Cancel"
+    Loaded="ContentDialog_Loaded"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    Name="prompt">
+
+    <StackPanel x:Name="StackControl" Width="270">
+        <TextBlock Padding="5">Name</TextBlock>
+        <TextBox x:Name="NameBox"/>
+        <TextBlock Padding="5">First Keybind</TextBlock>
+        <TextBox x:Name="KB1"/>
+        <TextBlock Padding="5">Second Keybind (Optional)</TextBlock>
+        <TextBox x:Name="KB2"/>
+        <TextBlock Padding="5">Third Keybind (Optional)</TextBlock>
+        <TextBox x:Name="KB3"/>
+        <TextBlock x:Name="Error" Padding="5,5,5,0" FontSize="11" Foreground="Yellow" TextWrapping="WrapWholeWords"/>
+    </StackPanel>
+</ContentDialog>

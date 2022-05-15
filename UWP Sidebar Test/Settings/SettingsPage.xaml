@@ -1,0 +1,60 @@
+﻿<Page
+    x:Class="Keybind_Helper.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Keybind_Helper"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Transparent" Name="settingsPage" Loaded="settingsPage_Loaded">
+    <Page.Resources>
+        <Style x:Key="HeaderText" TargetType="TextBlock"> 
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="WhiteText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Page.Resources>
+    <Grid Width="600" HorizontalAlignment="Left">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Style="{StaticResource WhiteText}" HorizontalAlignment="Left" FontSize="50" Margin="10,0,0,0">Settings</TextBlock>
+    <StackPanel Grid.Row="1" Margin="20">
+        <StackPanel BorderBrush="#4CFFFFFF" BorderThickness="1">
+            <TextBlock Style="{StaticResource HeaderText}">Grid</TextBlock>
+            <Grid Margin="5" RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource WhiteText}">Max Column Width</TextBlock>
+                    <Slider Grid.Column="1" x:Name="MaxColumnWidthSlider" Value="375" Minimum="300" Maximum="1000" StepFrequency="25"/>
+                    <TextBlock Grid.Column="2" Text="{Binding ElementName=MaxColumnWidthSlider, Path=Value}" Style="{StaticResource WhiteText}" HorizontalAlignment="Center"/>
+                    <Button Grid.Column="3" Click="Default_Grid_Slider_Click">Default</Button>
+                    <!---Row2-->
+                    <TextBlock Grid.Row="1" Style="{StaticResource WhiteText}">Prefered Column Count</TextBlock>
+                    <ComboBox x:Name="GridPreferedColumnCountComboBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Margin="0,0,15,0" SelectedIndex="0">
+                        <ComboBoxItem>Auto</ComboBoxItem>
+                        <ComboBoxItem>1</ComboBoxItem>
+                        <ComboBoxItem>2</ComboBoxItem>
+                        <ComboBoxItem>3</ComboBoxItem>
+                        <ComboBoxItem>4</ComboBoxItem>
+                    </ComboBox>
+                    <Button Grid.Column="3" Grid.Row="2" Click="Default_Grid_PreferedColumnCount_Click">Default</Button>
+                </Grid>
+            </StackPanel>
+    </StackPanel>
+    </Grid>
+</Page>
